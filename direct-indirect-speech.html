@@ -1438,51 +1438,63 @@ function selectRevQuote(el, idx) {
   document.getElementById('rev-ai-feedback').classList.remove('show');
 }
 
-async function checkRevWriting() {
-  const input = document.getElementById('rev-input').value.trim();
-  if (!input) { alert('Please type your sentence first!'); return; }
+function checkRevWriting() {
+  const rawInput = document.getElementById('rev-input').value.trim();
+  if (!rawInput) { alert('Please type your sentence first!'); return; }
   if (selectedRevIdx === null) { alert('Please choose a sentence first!'); return; }
 
+  const input = rawInput.toLowerCase();
   const fbBox  = document.getElementById('rev-ai-feedback');
   const fbText = document.getElementById('rev-ai-feedback-text');
   fbBox.classList.add('show');
-  fbText.innerHTML = '<span class="spinner"></span> Your editor is reviewing your work…';
+  fbBox.style.borderLeftColor = '';
 
-  const chosen = revQuotes[selectedRevIdx];
+  const revChecks = [
+    {
+      checks: [
+        { test: s => /["‘’“”]/.test(s), msg: 'Remember to put quotation marks around the spoken words — e.g. "We have secured the area," said the officer.' },
+        { test: s => /have secured/.test(s),     msg: 'The tense needs to go back to present perfect: "had secured" → "have secured" (you are restoring the original words).' },
+        { test: s => /\bwe\b/.test(s),           msg: 'The pronoun needs to change back to first person — "they" becomes "we" when we restore the original spoken words.' },
+      ],
+      praise: 'Excellent work! You correctly restored the tense to "have secured", changed "they" back to "we", and used quotation marks perfectly.'
+    },
+    {
+      checks: [
+        { test: s => /["‘’“”]/.test(s), msg: 'Don't forget quotation marks around the spoken words.' },
+        { test: s => /will hold/.test(s),         msg: '"Would" needs to go back to "will" — you are restoring what the mayor actually said.' },
+        { test: s => /\bi\b/.test(s),             msg: '"She" needs to change back to "I" — the mayor was speaking about herself.' },
+      ],
+      praise: 'Brilliant! You correctly changed "would" back to "will", restored the pronoun to "I", and used quotation marks in the right place.'
+    },
+    {
+      checks: [
+        { test: s => /["‘’“”]/.test(s), msg: 'Make sure you put quotation marks around the spoken words.' },
+        { test: s => /are (still )?analys/.test(s), msg: '"Were analysing" needs to go back to "are analysing" — restoring the present continuous tense.' },
+        { test: s => /\bwe\b/.test(s),             msg: '"They" should go back to "we" in the direct speech.' },
+      ],
+      praise: 'Well done! You successfully restored "are analysing", changed "they" back to "we", and punctuated your direct speech correctly.'
+    },
+    {
+      checks: [
+        { test: s => /["‘’“”]/.test(s), msg: 'Remember to put quotation marks around what the coach actually said.' },
+        { test: s => /have trained/.test(s),       msg: '"Had trained" needs to go back to "have trained" — restoring the present perfect tense.' },
+      ],
+      praise: 'Excellent! You correctly restored "have trained" and used quotation marks perfectly. Great job!'
+    }
+  ];
 
-  const prompt = `You are a Year 7 English teacher marking a student's direct speech reconstruction exercise.
+  const chosen = revChecks[selectedRevIdx];
+  let problem = null;
+  for (const check of chosen.checks) {
+    if (!check.test(input)) { problem = check.msg; break; }
+  }
 
-Original indirect speech: ${chosen.text}
-Grammar hint: ${chosen.hint}
-
-Student's answer: "${input}"
-
-MARKING RULES — follow these strictly:
-- The THREE things that MUST be correct are: (1) tense restored correctly (e.g. would → will, had done → have done), (2) pronouns restored to first person where needed, (3) quotation marks around the spoken words with a comma before the reporting clause.
-- Do NOT penalise minor time expression variations (e.g. "now" instead of "right now") or small stylistic differences. These are acceptable at Year 7 level.
-- If all three required areas are correct, the answer is CORRECT — celebrate it warmly in 2–3 sentences. Do not invent extra problems or add "one small thing…" unless there is a genuine error.
-- If there is a real error, mention ONE correction only, kindly, in simple language suitable for a 12-year-old.
-- Never use bullet points — write in friendly prose.`;
-
-  try {
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        messages: [{ role: 'user', content: prompt }]
-      })
-    });
-    const data = await resp.json();
-    const text = data.content?.map(c => c.text || '').join('') || 'No feedback received.';
-    fbText.textContent = text;
-  } catch (e) {
-    fbText.textContent = 'Could not reach the feedback engine. Check your tense reversal against the table on Slide 2!';
+  if (!problem) {
+    fbText.textContent = '✓ ' + chosen.praise;
+    fbBox.style.borderLeftColor = 'var(--correct)';
+  } else {
+    fbText.textContent = '✗ Almost there! ' + problem;
+    fbBox.style.borderLeftColor = 'var(--wrong)';
   }
 }
 
@@ -1519,56 +1531,71 @@ function nextVerbQ(idx) {
   document.getElementById('vq-' + idx).style.display = 'block';
 }
 
-async function checkWriting() {
-  const input = document.getElementById('writing-input').value.trim();
-  if (!input) { alert('Please type your sentence first!'); return; }
+function checkWriting() {
+  const rawInput = document.getElementById('writing-input').value.trim();
+  if (!rawInput) { alert('Please type your sentence first!'); return; }
   if (selectedQuoteIdx === null) { alert('Please choose a quote first!'); return; }
 
+  const input = rawInput.toLowerCase();
   const fbBox  = document.getElementById('ai-feedback');
   const fbText = document.getElementById('ai-feedback-text');
   fbBox.classList.add('show');
-  fbText.innerHTML = '<span class="spinner"></span> Your editor is reviewing your work…';
+  fbBox.style.borderLeftColor = '';
 
-  const chosen = quotes[selectedQuoteIdx];
+  const writeChecks = [
+    {
+      // "I have never seen anything like this in my life," said the bystander.
+      checks: [
+        { test: s => !/["‘’“”]/.test(s), msg: 'Good start! But make sure you have removed the quotation marks — indirect speech does not use them.' },
+        { test: s => /had never seen|had not seen/.test(s), msg: 'Check your tense — "have never seen" needs to shift back to "had never seen" in indirect speech.' },
+        { test: s => /she|he|they/.test(s), msg: 'Remember to change "I" to "he", "she", or "they" — you are reporting someone else's words.' },
+        { test: s => /said that|said she|said he|said they/.test(s), msg: 'Make sure you include a reporting verb like "said" or "said that" to introduce the indirect speech.' },
+      ],
+      praise: 'Fantastic! You nailed the tense shift to "had never seen", changed the pronoun correctly, and removed the quotation marks. That's a perfect indirect speech sentence!'
+    },
+    {
+      // "We will release the full report tomorrow," the minister announced.
+      checks: [
+        { test: s => !/["‘’“”]/.test(s), msg: 'Remove the quotation marks — they are not used in indirect speech.' },
+        { test: s => /would release/.test(s), msg: 'The tense needs to shift: "will release" → "would release" in indirect speech.' },
+        { test: s => /they/.test(s), msg: 'Change "we" to "they" — you are reporting what the minister said, not speaking as the minister.' },
+        { test: s => /the next day|the following day/.test(s), msg: '"Tomorrow" needs to change to "the next day" or "the following day" in indirect speech.' },
+      ],
+      praise: 'Excellent work! You correctly changed "will" to "would", "we" to "they", and "tomorrow" to "the next day". Perfect indirect speech!'
+    },
+    {
+      // "This is the most important discovery of the decade," claimed the scientist.
+      checks: [
+        { test: s => !/["‘’“”]/.test(s), msg: 'Remove the quotation marks — they are not needed in indirect speech.' },
+        { test: s => /was the most important/.test(s), msg: 'Shift the tense: "is" → "was" in indirect speech.' },
+        { test: s => /that that was|claimed that that|that it was|that this was/.test(s) || /claimed that/.test(s), msg: 'Add "that" after your reporting verb — e.g. "the scientist claimed that...".' },
+      ],
+      praise: 'Well done! You shifted "is" to "was" and reported the sentence correctly. Great indirect speech!'
+    },
+    {
+      // "We are searching for the suspect right now," said the officer.
+      checks: [
+        { test: s => !/["‘’“”]/.test(s), msg: 'Remove the quotation marks — indirect speech does not use them.' },
+        { test: s => /were searching/.test(s), msg: 'Shift the tense: "are searching" (present continuous) → "were searching" (past continuous).' },
+        { test: s => /they/.test(s), msg: 'Change "we" to "they" — you are reporting the officer's words, not speaking as the officer.' },
+        { test: s => /at that (moment|time)|then/.test(s), msg: '"Right now" needs to change to "at that moment" or "then" in indirect speech.' },
+      ],
+      praise: 'Brilliant! You correctly shifted to "were searching", changed "we" to "they", and updated the time expression. That's a perfect answer!'
+    }
+  ];
 
-  const prompt = `You are a friendly Year 7 English teacher giving quick verbal feedback to a student.
+  const chosen = writeChecks[selectedQuoteIdx];
+  let problem = null;
+  for (const check of chosen.checks) {
+    if (!check.test(input)) { problem = check.msg; break; }
+  }
 
-The student was asked to convert this direct speech into indirect speech:
-${chosen.text}
-
-The student wrote: "${input}"
-
-Internally check these things (do NOT mention rules or numbers in your response):
-- Are quotation marks gone from around the spoken words?
-- Is the tense shifted back one step (e.g. have seen → had seen, will → would)?
-- Are first-person pronouns changed to third person (I → he/she, we → they)?
-- Has "this" changed to "that" and "these" to "those"?
-- Is a reporting verb present (said, told, etc.)?
-
-If everything is correct: respond with just 1–2 warm, natural sentences of praise. Sound like a real teacher, not a checklist.
-If something is wrong: in 1–2 friendly sentences, tell the student the ONE most important thing to fix and show them the corrected version. Do not list everything that is right first — get straight to the point.
-
-Do not mention rules, numbers, or categories. Just talk to the student naturally.`;
-
-  try {
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        messages: [{ role: 'user', content: prompt }]
-      })
-    });
-    const data = await resp.json();
-    const text = data.content?.map(c => c.text || '').join('') || 'No feedback received.';
-    fbText.textContent = text;
-  } catch (e) {
-    fbText.textContent = 'Could not reach the feedback engine. Check your sentence against the tense table on Slide 2!';
+  if (!problem) {
+    fbText.textContent = '✓ ' + chosen.praise;
+    fbBox.style.borderLeftColor = 'var(--correct)';
+  } else {
+    fbText.textContent = '✗ ' + problem;
+    fbBox.style.borderLeftColor = 'var(--wrong)';
   }
 }
 </script>
