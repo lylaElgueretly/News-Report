@@ -843,7 +843,7 @@
         <div class="label">📝 Use Indirect Speech when…</div>
         <ul style="padding-left:18px; font-size:0.91rem; line-height:1.75; color:var(--ink);">
           <li>You want to <strong>summarise</strong> a long statement briefly</li>
-          <li>The exact wording is not important</li>
+          <li>The exact wording isn't important</li>
           <li>You are <strong>combining several quotes</strong> into one sentence</li>
           <li>You want the article to <strong>flow more smoothly</strong></li>
         </ul>
@@ -1061,7 +1061,7 @@
 
     <div class="ai-feedback-box" id="ai-feedback">
       <div class="fb-header">✏️ Editor's Feedback</div>
-      <div id="ai-feedback-text"></div>
+      <div id="ai-feedback-text">Loading…</div>
     </div>
 
     <div class="nav-bar">
@@ -1132,7 +1132,7 @@
 
     <div class="ai-feedback-box" id="rev-ai-feedback">
       <div class="fb-header">✏️ Editor's Feedback</div>
-      <div id="rev-ai-feedback-text"></div>
+      <div id="rev-ai-feedback-text">Loading…</div>
     </div>
 
     <div class="nav-bar">
@@ -1293,7 +1293,7 @@
           </div>
           <div class="verb-fb" id="vfb-3"></div>
           <div class="quiz-next-btn" id="vnext-3" style="margin-top:10px; display:none; background:var(--gold); color:var(--ink); padding:11px 28px; font-family:'JetBrains Mono',monospace; font-size:0.75rem; letter-spacing:0.14em; text-transform:uppercase; cursor:default;">
-            🏆 All done — you are press-ready!
+            🏆 All done — you're press-ready!
           </div>
         </div>
       </div>
@@ -1443,35 +1443,30 @@ function checkRevWriting() {
   if (!rawInput) { alert('Please type your sentence first!'); return; }
   if (selectedRevIdx === null) { alert('Please choose a sentence first!'); return; }
 
-  const fbBox  = document.getElementById('rev-ai-feedback');
+  const fbBox = document.getElementById('rev-ai-feedback');
   const fbText = document.getElementById('rev-ai-feedback-text');
   fbBox.classList.add('show');
   fbBox.style.borderLeftColor = 'var(--gold)';
 
   const modelAnswers = [
-    {
-      answer: `"We have secured the area," the officer said.`,
-      changes: `✓ Tense restored: had secured → have secured | ✓ Pronoun restored: they → we | ✓ Quotation marks added around spoken words`
-    },
-    {
-      answer: `"I will hold a press conference tomorrow," the mayor announced.`,
-      changes: `✓ Tense restored: would → will | ✓ Pronoun restored: she → I | ✓ Time expression: the following day → tomorrow | ✓ Quotation marks added`
-    },
-    {
-      answer: `"We are still analysing the data right now," the researcher explained.`,
-      changes: `✓ Tense restored: were analysing → are analysing | ✓ Pronoun restored: they → we | ✓ Time expression: at that moment → right now | ✓ Quotation marks added`
-    },
-    {
-      answer: `"The team have trained very hard this week," the coach said.`,
-      changes: `✓ Tense restored: had trained → have trained | ✓ Time expression: that week → this week | ✓ Quotation marks added`
-    }
+    { answer: `"We have secured the area," the officer said.`, changes: `✓ Tense: had secured → have secured &nbsp;|✓ Pronoun: they → we &nbsp;|✓ Quotation marks added` },
+    { answer: `"I will hold a press conference tomorrow," the mayor announced.`, changes: `✓ Tense: would → will &nbsp;|✓ Pronoun: she → I &nbsp;|✓ Time: the following day → tomorrow &nbsp;|✓ Quotation marks added` },
+    { answer: `"We are still analysing the data right now," the researcher explained.`, changes: `✓ Tense: were analysing → are analysing &nbsp;|✓ Pronoun: they → we &nbsp;|✓ Time: at that moment → right now &nbsp;|✓ Quotation marks added` },
+    { answer: `"The team have trained very hard this week," the coach said.`, changes: `✓ Tense: had trained → have trained &nbsp;|✓ Time: that week → this week &nbsp;|✓ Quotation marks added` }
   ];
 
-  const chosen = modelAnswers[selectedRevIdx];
-  fbText.innerHTML = `<strong style="display:block;margin-bottom:8px;">Model Answer:</strong>
-    <em style="font-size:1rem;">${chosen.answer}</em>
-    <span style="display:block;margin-top:10px;font-size:0.82rem;color:var(--grey);">${chosen.changes}</span>`;
+  const m = modelAnswers[selectedRevIdx];
+  fbText.innerHTML = `<strong>Model Answer:</strong><br><br><em>${m.answer}</em><br><br><span style="font-size:0.82rem;color:var(--grey);">${m.changes}</span>`;
 }
+
+// ── Verb Game ──
+const verbFeedback = [
+  { ok: '"Urged" is perfect here — it shows the fire chief is giving a strong, safety-focused instruction, not just making a calm observation.', no: 'Think about the urgency of a fire chief speaking about evacuation. Which verb shows they are pushing residents to act quickly?' },
+  { ok: '"Declared" is ideal for a formal, official announcement — it gives the statement authority and weight.', no: 'A minister passing a new law is making a formal public statement. Which verb best suits that official, ceremonial tone?' },
+  { ok: 'Excellent! "Explained" tells the reader the scientist is giving reasons and detail, not making an announcement or issuing a warning.', no: 'The scientist is giving reasons for something. Which verb signals that a source is breaking something down or giving an account?' },
+  { ok: 'Spot on! "Rejected" clearly signals the spokesperson is pushing back against accusations — much more precise than a neutral word.', no: 'The spokesperson is actively pushing back against accusations. Which verb best shows a firm refusal or dismissal?' }
+];
+
 function checkVerb(qIdx, btn, result) {
   const qEl  = document.getElementById('vq-' + qIdx);
   const btns = qEl.querySelectorAll('.verb-opt-btn');
@@ -1502,34 +1497,21 @@ function checkWriting() {
   if (!rawInput) { alert('Please type your sentence first!'); return; }
   if (selectedQuoteIdx === null) { alert('Please choose a quote first!'); return; }
 
-  const fbBox  = document.getElementById('ai-feedback');
+  const fbBox = document.getElementById('ai-feedback');
   const fbText = document.getElementById('ai-feedback-text');
   fbBox.classList.add('show');
   fbBox.style.borderLeftColor = 'var(--gold)';
 
   const modelAnswers = [
-    {
-      answer: `The bystander said that he/she had never seen anything like that in his/her life.`,
-      changes: `✓ Quotation marks removed | ✓ Tense shifted: have never seen → had never seen | ✓ Pronoun changed: I → he/she | ✓ Reporting verb added: said that`
-    },
-    {
-      answer: `The minister announced that they would release the full report the next day.`,
-      changes: `✓ Quotation marks removed | ✓ Tense shifted: will → would | ✓ Pronoun changed: we → they | ✓ Time expression: tomorrow → the next day`
-    },
-    {
-      answer: `The scientist claimed that it was the most important discovery of the decade.`,
-      changes: `✓ Quotation marks removed | ✓ Tense shifted: is → was | ✓ Reporting verb added: claimed that`
-    },
-    {
-      answer: `The officer said that they were searching for the suspect at that moment.`,
-      changes: `✓ Quotation marks removed | ✓ Tense shifted: are searching → were searching | ✓ Pronoun changed: we → they | ✓ Time expression: right now → at that moment`
-    }
+    { answer: `The bystander said that he/she had never seen anything like that in his/her life.`, changes: `✓ Quotation marks removed &nbsp;|✓ Tense: have never seen → had never seen &nbsp;|✓ Pronoun: I → he/she &nbsp;|✓ Reporting verb: said that` },
+    { answer: `The minister announced that they would release the full report the next day.`, changes: `✓ Quotation marks removed &nbsp;|✓ Tense: will → would &nbsp;|✓ Pronoun: we → they &nbsp;|✓ Time: tomorrow → the next day` },
+    { answer: `The scientist claimed that it was the most important discovery of the decade.`, changes: `✓ Quotation marks removed &nbsp;|✓ Tense: is → was &nbsp;|✓ Reporting verb: claimed that` },
+    { answer: `The officer said that they were searching for the suspect at that moment.`, changes: `✓ Quotation marks removed &nbsp;|✓ Tense: are searching → were searching &nbsp;|✓ Pronoun: we → they &nbsp;|✓ Time: right now → at that moment` }
   ];
 
-  const chosen = modelAnswers[selectedQuoteIdx];
-  fbText.innerHTML = `<strong style="display:block;margin-bottom:8px;">Model Answer:</strong>
-    <em style="font-size:1rem;">${chosen.answer}</em>
-    <span style="display:block;margin-top:10px;font-size:0.82rem;color:var(--grey);">${chosen.changes}</span>`;
-}</script>
+  const m = modelAnswers[selectedQuoteIdx];
+  fbText.innerHTML = `<strong>Model Answer:</strong><br><br><em>${m.answer}</em><br><br><span style="font-size:0.82rem;color:var(--grey);">${m.changes}</span>`;
+}
+</script>
 </body>
 </html>
