@@ -1449,14 +1449,47 @@ function checkRevWriting() {
   fbBox.style.borderLeftColor = 'var(--gold)';
 
   const modelAnswers = [
-    { answer: `"We have secured the area," the officer said.`, changes: `✓ Tense: had secured → have secured &nbsp;|✓ Pronoun: they → we &nbsp;|✓ Quotation marks added` },
-    { answer: `"I will hold a press conference tomorrow," the mayor announced.`, changes: `✓ Tense: would → will &nbsp;|✓ Pronoun: she → I &nbsp;|✓ Time: the following day → tomorrow &nbsp;|✓ Quotation marks added` },
-    { answer: `"We are still analysing the data right now," the researcher explained.`, changes: `✓ Tense: were analysing → are analysing &nbsp;|✓ Pronoun: they → we &nbsp;|✓ Time: at that moment → right now &nbsp;|✓ Quotation marks added` },
-    { answer: `"The team have trained very hard this week," the coach said.`, changes: `✓ Tense: had trained → have trained &nbsp;|✓ Time: that week → this week &nbsp;|✓ Quotation marks added` }
+    {
+      title: 'Crime Scene — Model Answers',
+      answers: [
+        '"We have secured the area," the officer said.',
+        'The officer said, "We have secured the area."',
+        '"We have secured the area," said the officer.'
+      ],
+      changes: '✓ Tense restored: <em>had secured</em> → <em>have secured</em> &nbsp;·&nbsp; ✓ Pronoun restored: <em>they</em> → <em>we</em> &nbsp;·&nbsp; ✓ Quotation marks added &nbsp;·&nbsp; ✓ Reporting clause can come before or after the quote'
+    },
+    {
+      title: 'Press Conference — Model Answers',
+      answers: [
+        '"I will hold a press conference tomorrow," the mayor announced.',
+        'The mayor announced, "I will hold a press conference tomorrow."',
+        '"I will hold a press conference tomorrow," announced the mayor.'
+      ],
+      changes: '✓ Tense restored: <em>would</em> → <em>will</em> &nbsp;·&nbsp; ✓ Pronoun restored: <em>she</em> → <em>I</em> &nbsp;·&nbsp; ✓ Time restored: <em>the following day</em> → <em>tomorrow</em> &nbsp;·&nbsp; ✓ Quotation marks added &nbsp;·&nbsp; ✓ Reporting clause can come before or after'
+    },
+    {
+      title: 'Science Desk — Model Answers',
+      answers: [
+        '"We are still analysing the data right now," the researcher explained.',
+        'The researcher explained, "We are still analysing the data right now."',
+        '"We are still analysing the data now," explained the researcher.'
+      ],
+      changes: '✓ Tense restored: <em>were analysing</em> → <em>are analysing</em> &nbsp;·&nbsp; ✓ Pronoun restored: <em>they</em> → <em>we</em> &nbsp;·&nbsp; ✓ Time restored: <em>at that moment</em> → <em>right now / now</em> &nbsp;·&nbsp; ✓ Quotation marks added'
+    },
+    {
+      title: 'Sports Report — Model Answers',
+      answers: [
+        '"The team have trained very hard this week," the coach said.',
+        'The coach said, "The team have trained very hard this week."',
+        '"We have trained very hard this week," the coach said.'
+      ],
+      changes: '✓ Tense restored: <em>had trained</em> → <em>have trained</em> &nbsp;·&nbsp; ✓ Time restored: <em>that week</em> → <em>this week</em> &nbsp;·&nbsp; ✓ Quotation marks added &nbsp;·&nbsp; ✓ Note: <em>the team</em> or <em>we</em> both acceptable'
+    }
   ];
 
   const m = modelAnswers[selectedRevIdx];
-  fbText.innerHTML = `<strong>Model Answer:</strong><br><br><em>${m.answer}</em><br><br><span style="font-size:0.82rem;color:var(--grey);">${m.changes}</span>`;
+  const answerList = m.answers.map(a => '<li style="margin-bottom:6px;"><em>' + a + '</em></li>').join('');
+  fbText.innerHTML = '<strong style="display:block;margin-bottom:10px;">' + m.title + ':</strong><ul style="padding-left:18px;margin-bottom:12px;">' + answerList + '</ul><div style="font-size:0.82rem;color:var(--grey);border-top:1px dashed var(--border);padding-top:8px;">' + m.changes + '</div>';
 }
 
 // ── Verb Game ──
@@ -1503,14 +1536,44 @@ function checkWriting() {
   fbBox.style.borderLeftColor = 'var(--gold)';
 
   const modelAnswers = [
-    { answer: `The bystander said that he/she had never seen anything like that in his/her life.`, changes: `✓ Quotation marks removed &nbsp;|✓ Tense: have never seen → had never seen &nbsp;|✓ Pronoun: I → he/she &nbsp;|✓ Reporting verb: said that` },
-    { answer: `The minister announced that they would release the full report the next day.`, changes: `✓ Quotation marks removed &nbsp;|✓ Tense: will → would &nbsp;|✓ Pronoun: we → they &nbsp;|✓ Time: tomorrow → the next day` },
-    { answer: `The scientist claimed that it was the most important discovery of the decade.`, changes: `✓ Quotation marks removed &nbsp;|✓ Tense: is → was &nbsp;|✓ Reporting verb: claimed that` },
-    { answer: `The officer said that they were searching for the suspect at that moment.`, changes: `✓ Quotation marks removed &nbsp;|✓ Tense: are searching → were searching &nbsp;|✓ Pronoun: we → they &nbsp;|✓ Time: right now → at that moment` }
+    {
+      title: 'Eyewitness Quote — Model Answers',
+      answers: [
+        'The bystander said that he had never seen anything like that in his life.',
+        'The bystander said that she had never seen anything like that in her life.',
+        '"I have never seen anything like this in my life," the bystander said.'
+      ],
+      changes: '✓ Quotation marks removed &nbsp;·&nbsp; ✓ Tense: <em>have never seen</em> → <em>had never seen</em> &nbsp;·&nbsp; ✓ Pronoun: <em>I</em> → <em>he / she</em> &nbsp;·&nbsp; ✓ Possessive: <em>my</em> → <em>his / her</em> &nbsp;·&nbsp; ✓ Demonstrative: <em>this</em> → <em>that</em> &nbsp;·&nbsp; ✓ Reporting verb can come before or after the subject'
+    },
+    {
+      title: 'Official Statement — Model Answers',
+      answers: [
+        'The minister announced that they would release the full report the next day.',
+        'The minister announced that they would release the full report the following day.'
+      ],
+      changes: '✓ Quotation marks removed &nbsp;·&nbsp; ✓ Tense: <em>will</em> → <em>would</em> &nbsp;·&nbsp; ✓ Pronoun: <em>we</em> → <em>they</em> &nbsp;·&nbsp; ✓ Time: <em>tomorrow</em> → <em>the next day / the following day</em>'
+    },
+    {
+      title: 'Expert Comment — Model Answers',
+      answers: [
+        'The scientist claimed that it was the most important discovery of the decade.',
+        'The scientist claimed that that was the most important discovery of the decade.'
+      ],
+      changes: '✓ Quotation marks removed &nbsp;·&nbsp; ✓ Tense: <em>is</em> → <em>was</em> &nbsp;·&nbsp; ✓ Demonstrative: <em>This</em> → <em>it / that</em> (both acceptable) &nbsp;·&nbsp; ✓ Reporting verb: <em>claimed that</em>'
+    },
+    {
+      title: 'Crime Report — Model Answers',
+      answers: [
+        'The officer said that they were searching for the suspect at that moment.',
+        'The officer said that they were searching for the suspect then.'
+      ],
+      changes: '✓ Quotation marks removed &nbsp;·&nbsp; ✓ Tense: <em>are searching</em> → <em>were searching</em> &nbsp;·&nbsp; ✓ Pronoun: <em>we</em> → <em>they</em> &nbsp;·&nbsp; ✓ Time: <em>right now</em> → <em>at that moment / then</em>'
+    }
   ];
 
   const m = modelAnswers[selectedQuoteIdx];
-  fbText.innerHTML = `<strong>Model Answer:</strong><br><br><em>${m.answer}</em><br><br><span style="font-size:0.82rem;color:var(--grey);">${m.changes}</span>`;
+  const answerList = m.answers.map(a => '<li style="margin-bottom:6px;"><em>' + a + '</em></li>').join('');
+  fbText.innerHTML = '<strong style="display:block;margin-bottom:10px;">' + m.title + ':</strong><ul style="padding-left:18px;margin-bottom:12px;">' + answerList + '</ul><div style="font-size:0.82rem;color:var(--grey);border-top:1px dashed var(--border);padding-top:8px;">' + m.changes + '</div>';
 }
 </script>
 </body>
