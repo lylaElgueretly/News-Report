@@ -1453,34 +1453,34 @@ function checkRevWriting() {
   const revChecks = [
     {
       checks: [
-        { test: s => /["‘’“”]/.test(s), msg: 'Remember to put quotation marks around the spoken words — e.g. "We have secured the area," said the officer.' },
-        { test: s => /have secured/.test(s),     msg: 'The tense needs to go back to present perfect: "had secured" → "have secured" (you are restoring the original words).' },
-        { test: s => /\bwe\b/.test(s),           msg: 'The pronoun needs to change back to first person — "they" becomes "we" when we restore the original spoken words.' },
+        { test: s => /["‘’“”]/.test(s), msg: `Remember to put quotation marks around the spoken words — e.g. "We have secured the area," said the officer.` },
+        { test: s => /have secured/.test(s),     msg: `The tense needs to go back to present perfect: "had secured" → "have secured" (you are restoring the original words).` },
+        { test: s => /\bwe\b/.test(s),           msg: `The pronoun needs to change back to first person — "they" becomes "we" when we restore the original spoken words.` },
       ],
-      praise: 'Excellent work! You correctly restored the tense to "have secured", changed "they" back to "we", and used quotation marks perfectly.'
+      praise: `Excellent work! You correctly restored the tense to "have secured", changed "they" back to "we", and used quotation marks perfectly.`
     },
     {
       checks: [
-        { test: s => /["‘’“”]/.test(s), msg: 'Do not forget quotation marks around the spoken words.' },
-        { test: s => /will hold/.test(s),         msg: '"Would" needs to go back to "will" — you are restoring what the mayor actually said.' },
-        { test: s => /\bi\b/.test(s),             msg: '"She" needs to change back to "I" — the mayor was speaking about herself.' },
+        { test: s => /["‘’“”]/.test(s), msg: `Do not forget quotation marks around the spoken words.` },
+        { test: s => /will hold/.test(s),         msg: `"Would" needs to go back to "will" — you are restoring what the mayor actually said.` },
+        { test: s => /\bi\b/.test(s),             msg: `"She" needs to change back to "I" — the mayor was speaking about herself.` },
       ],
-      praise: 'Brilliant! You correctly changed "would" back to "will", restored the pronoun to "I", and used quotation marks in the right place.'
+      praise: `Brilliant! You correctly changed "would" back to "will", restored the pronoun to "I", and used quotation marks in the right place.`
     },
     {
       checks: [
-        { test: s => /["‘’“”]/.test(s), msg: 'Make sure you put quotation marks around the spoken words.' },
-        { test: s => /are (still )?analys/.test(s), msg: '"Were analysing" needs to go back to "are analysing" — restoring the present continuous tense.' },
-        { test: s => /\bwe\b/.test(s),             msg: '"They" should go back to "we" in the direct speech.' },
+        { test: s => /["‘’“”]/.test(s), msg: `Make sure you put quotation marks around the spoken words.` },
+        { test: s => /are (still )?analys/.test(s), msg: `"Were analysing" needs to go back to "are analysing" — restoring the present continuous tense.` },
+        { test: s => /\bwe\b/.test(s),             msg: `"They" should go back to "we" in the direct speech.` },
       ],
-      praise: 'Well done! You successfully restored "are analysing", changed "they" back to "we", and punctuated your direct speech correctly.'
+      praise: `Well done! You successfully restored "are analysing", changed "they" back to "we", and punctuated your direct speech correctly.`
     },
     {
       checks: [
-        { test: s => /["‘’“”]/.test(s), msg: 'Remember to put quotation marks around what the coach actually said.' },
-        { test: s => /have trained/.test(s),       msg: '"Had trained" needs to go back to "have trained" — restoring the present perfect tense.' },
+        { test: s => /["‘’“”]/.test(s), msg: `Remember to put quotation marks around what the coach actually said.` },
+        { test: s => /have trained/.test(s),       msg: `"Had trained" needs to go back to "have trained" — restoring the present perfect tense.` },
       ],
-      praise: 'Excellent! You correctly restored "have trained" and used quotation marks perfectly. Great job!'
+      praise: `Excellent! You correctly restored "have trained" and used quotation marks perfectly. Great job!`
     }
   ];
 
@@ -1499,12 +1499,13 @@ function checkRevWriting() {
   }
 }
 
-// ── Verb Game ──
+
+// ── Verb Game feedback ──
 const verbFeedback = [
-  { ok: '"Urged" is perfect here — it shows the fire chief is giving a strong, safety-focused instruction, not just making a calm observation.', no: 'Think about the urgency of a fire chief speaking about evacuation. Which verb shows they are pushing residents to act quickly?' },
-  { ok: '"Declared" is ideal for a formal, official announcement — it gives the statement authority and weight.', no: 'A minister passing a new law is making a formal public statement. Which verb best suits that official, ceremonial tone?' },
-  { ok: 'Excellent! "Explained" tells the reader the scientist is giving reasons and detail, not making an announcement or issuing a warning.', no: 'The scientist is giving reasons for something. Which verb signals that a source is breaking something down or giving an account?' },
-  { ok: 'Spot on! "Rejected" clearly signals the spokesperson is pushing back against accusations — much more precise than a neutral word.', no: 'The spokesperson is actively pushing back against accusations. Which verb best shows a firm refusal or dismissal?' }
+  { ok: `"Urged" is perfect here — it shows the fire chief is giving a strong, safety-focused instruction, not just making a calm observation.`, no: `Think about the urgency of a fire chief speaking about evacuation. Which verb shows they are pushing residents to act quickly?` },
+  { ok: `"Declared" is ideal for a formal, official announcement — it gives the statement authority and weight.`, no: `A minister passing a new law is making a formal public statement. Which verb best suits that official, ceremonial tone?` },
+  { ok: `Excellent! "Explained" tells the reader the scientist is giving reasons and detail, not making an announcement or issuing a warning.`, no: `The scientist is giving reasons for something. Which verb signals that a source is breaking something down or giving an account?` },
+  { ok: `Spot on! "Rejected" clearly signals the spokesperson is pushing back against accusations — much more precise than a neutral word.`, no: `The spokesperson is actively pushing back against accusations. Which verb best shows a firm refusal or dismissal?` }
 ];
 
 function checkVerb(qIdx, btn, result) {
@@ -1548,41 +1549,41 @@ function checkWriting() {
     {
       // "I have never seen anything like this in my life," said the bystander.
       checks: [
-        { test: s => !/["‘’“”]/.test(s), msg: 'Good start! But make sure you have removed the quotation marks — indirect speech does not use them.' },
-        { test: s => /had never seen|had not seen/.test(s), msg: 'Check your tense — "have never seen" needs to shift back to "had never seen" in indirect speech.' },
-        { test: s => /she|he|they/.test(s), msg: 'Remember to change "I" to "he", "she", or "they" — you are reporting someone else’s words.' },
-        { test: s => /said that|said she|said he|said they/.test(s), msg: 'Make sure you include a reporting verb like "said" or "said that" to introduce the indirect speech.' },
+        { test: s => !/["‘’“”]/.test(s), msg: `Good start! But make sure you have removed the quotation marks — indirect speech does not use them.` },
+        { test: s => /had never seen|had not seen/.test(s), msg: `Check your tense — "have never seen" needs to shift back to "had never seen" in indirect speech.` },
+        { test: s => /she|he|they/.test(s), msg: `Remember to change "I" to "he", "she", or "they" — you are reporting someone else’s words.` },
+        { test: s => /said that|said she|said he|said they/.test(s), msg: `Make sure you include a reporting verb like "said" or "said that" to introduce the indirect speech.` },
       ],
-      praise: 'Fantastic! You nailed the tense shift to "had never seen", changed the pronoun correctly, and removed the quotation marks. That is a perfect indirect speech sentence!'
+      praise: `Fantastic! You nailed the tense shift to "had never seen", changed the pronoun correctly, and removed the quotation marks. That is a perfect indirect speech sentence!`
     },
     {
       // "We will release the full report tomorrow," the minister announced.
       checks: [
-        { test: s => !/["‘’“”]/.test(s), msg: 'Remove the quotation marks — they are not used in indirect speech.' },
-        { test: s => /would release/.test(s), msg: 'The tense needs to shift: "will release" → "would release" in indirect speech.' },
-        { test: s => /they/.test(s), msg: 'Change "we" to "they" — you are reporting what the minister said, not speaking as the minister.' },
-        { test: s => /the next day|the following day/.test(s), msg: '"Tomorrow" needs to change to "the next day" or "the following day" in indirect speech.' },
+        { test: s => !/["‘’“”]/.test(s), msg: `Remove the quotation marks — they are not used in indirect speech.` },
+        { test: s => /would release/.test(s), msg: `The tense needs to shift: "will release" → "would release" in indirect speech.` },
+        { test: s => /they/.test(s), msg: `Change "we" to "they" — you are reporting what the minister said, not speaking as the minister.` },
+        { test: s => /the next day|the following day/.test(s), msg: `"Tomorrow" needs to change to "the next day" or "the following day" in indirect speech.` },
       ],
-      praise: 'Excellent work! You correctly changed "will" to "would", "we" to "they", and "tomorrow" to "the next day". Perfect indirect speech!'
+      praise: `Excellent work! You correctly changed "will" to "would", "we" to "they", and "tomorrow" to "the next day". Perfect indirect speech!`
     },
     {
       // "This is the most important discovery of the decade," claimed the scientist.
       checks: [
-        { test: s => !/["‘’“”]/.test(s), msg: 'Remove the quotation marks — they are not needed in indirect speech.' },
-        { test: s => /was the most important/.test(s), msg: 'Shift the tense: "is" → "was" in indirect speech.' },
-        { test: s => /that that was|claimed that that|that it was|that this was/.test(s) || /claimed that/.test(s), msg: 'Add "that" after your reporting verb — e.g. "the scientist claimed that...".' },
+        { test: s => !/["‘’“”]/.test(s), msg: `Remove the quotation marks — they are not needed in indirect speech.` },
+        { test: s => /was the most important/.test(s), msg: `Shift the tense: "is" → "was" in indirect speech.` },
+        { test: s => /that that was|claimed that that|that it was|that this was/.test(s) || /claimed that/.test(s), msg: `Add "that" after your reporting verb — e.g. "the scientist claimed that...".` },
       ],
-      praise: 'Well done! You shifted "is" to "was" and reported the sentence correctly. Great indirect speech!'
+      praise: `Well done! You shifted "is" to "was" and reported the sentence correctly. Great indirect speech!`
     },
     {
       // "We are searching for the suspect right now," said the officer.
       checks: [
-        { test: s => !/["‘’“”]/.test(s), msg: 'Remove the quotation marks — indirect speech does not use them.' },
-        { test: s => /were searching/.test(s), msg: 'Shift the tense: "are searching" (present continuous) → "were searching" (past continuous).' },
-        { test: s => /they/.test(s), msg: 'Change "we" to "they" — you are reporting the officer’s words, not speaking as the officer.' },
-        { test: s => /at that (moment|time)|then/.test(s), msg: '"Right now" needs to change to "at that moment" or "then" in indirect speech.' },
+        { test: s => !/["‘’“”]/.test(s), msg: `Remove the quotation marks — indirect speech does not use them.` },
+        { test: s => /were searching/.test(s), msg: `Shift the tense: "are searching" (present continuous) → "were searching" (past continuous).` },
+        { test: s => /they/.test(s), msg: `Change "we" to "they" — you are reporting the officer’s words, not speaking as the officer.` },
+        { test: s => /at that (moment|time)|then/.test(s), msg: `"Right now" needs to change to "at that moment" or "then" in indirect speech.` },
       ],
-      praise: 'Brilliant! You correctly shifted to "were searching", changed "we" to "they", and updated the time expression. That is a perfect answer!'
+      praise: `Brilliant! You correctly shifted to "were searching", changed "we" to "they", and updated the time expression. That is a perfect answer!`
     }
   ];
 
