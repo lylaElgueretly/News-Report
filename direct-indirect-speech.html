@@ -1061,7 +1061,7 @@
 
     <div class="ai-feedback-box" id="ai-feedback">
       <div class="fb-header">✏️ Editor's Feedback</div>
-      <div id="ai-feedback-text">Loading…</div>
+      <div id="ai-feedback-text"></div>
     </div>
 
     <div class="nav-bar">
@@ -1132,7 +1132,7 @@
 
     <div class="ai-feedback-box" id="rev-ai-feedback">
       <div class="fb-header">✏️ Editor's Feedback</div>
-      <div id="rev-ai-feedback-text">Loading…</div>
+      <div id="rev-ai-feedback-text"></div>
     </div>
 
     <div class="nav-bar">
@@ -1448,6 +1448,7 @@ function checkRevWriting() {
   const fbText = document.getElementById('rev-ai-feedback-text');
   fbBox.classList.add('show');
   fbBox.style.borderLeftColor = '';
+  fbText.textContent = 'Checking…';
 
   const revChecks = [
     {
@@ -1460,7 +1461,7 @@ function checkRevWriting() {
     },
     {
       checks: [
-        { test: s => /["‘’“”]/.test(s), msg: 'Don't forget quotation marks around the spoken words.' },
+        { test: s => /["‘’“”]/.test(s), msg: 'Do not forget quotation marks around the spoken words.' },
         { test: s => /will hold/.test(s),         msg: '"Would" needs to go back to "will" — you are restoring what the mayor actually said.' },
         { test: s => /\bi\b/.test(s),             msg: '"She" needs to change back to "I" — the mayor was speaking about herself.' },
       ],
@@ -1541,6 +1542,7 @@ function checkWriting() {
   const fbText = document.getElementById('ai-feedback-text');
   fbBox.classList.add('show');
   fbBox.style.borderLeftColor = '';
+  fbText.textContent = 'Checking…';
 
   const writeChecks = [
     {
@@ -1548,10 +1550,10 @@ function checkWriting() {
       checks: [
         { test: s => !/["‘’“”]/.test(s), msg: 'Good start! But make sure you have removed the quotation marks — indirect speech does not use them.' },
         { test: s => /had never seen|had not seen/.test(s), msg: 'Check your tense — "have never seen" needs to shift back to "had never seen" in indirect speech.' },
-        { test: s => /she|he|they/.test(s), msg: 'Remember to change "I" to "he", "she", or "they" — you are reporting someone else's words.' },
+        { test: s => /she|he|they/.test(s), msg: 'Remember to change "I" to "he", "she", or "they" — you are reporting someone else’s words.' },
         { test: s => /said that|said she|said he|said they/.test(s), msg: 'Make sure you include a reporting verb like "said" or "said that" to introduce the indirect speech.' },
       ],
-      praise: 'Fantastic! You nailed the tense shift to "had never seen", changed the pronoun correctly, and removed the quotation marks. That's a perfect indirect speech sentence!'
+      praise: 'Fantastic! You nailed the tense shift to "had never seen", changed the pronoun correctly, and removed the quotation marks. That is a perfect indirect speech sentence!'
     },
     {
       // "We will release the full report tomorrow," the minister announced.
@@ -1577,10 +1579,10 @@ function checkWriting() {
       checks: [
         { test: s => !/["‘’“”]/.test(s), msg: 'Remove the quotation marks — indirect speech does not use them.' },
         { test: s => /were searching/.test(s), msg: 'Shift the tense: "are searching" (present continuous) → "were searching" (past continuous).' },
-        { test: s => /they/.test(s), msg: 'Change "we" to "they" — you are reporting the officer's words, not speaking as the officer.' },
+        { test: s => /they/.test(s), msg: 'Change "we" to "they" — you are reporting the officer’s words, not speaking as the officer.' },
         { test: s => /at that (moment|time)|then/.test(s), msg: '"Right now" needs to change to "at that moment" or "then" in indirect speech.' },
       ],
-      praise: 'Brilliant! You correctly shifted to "were searching", changed "we" to "they", and updated the time expression. That's a perfect answer!'
+      praise: 'Brilliant! You correctly shifted to "were searching", changed "we" to "they", and updated the time expression. That is a perfect answer!'
     }
   ];
 
